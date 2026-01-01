@@ -1,8 +1,10 @@
+import run
+
 class Course:
   def __init__(self, num):
     self.name = input(f"\t\t\t#{num} Course: ")
     self.id = input(f"\t\t\t- {self.name} course id: ")
-    self.mark = int(input(f"\t\t\t- mark (base 10): "))
+    self.mark = run.rUpTo(int(input(f"\t\t\t- mark (base 10): ")))
 
 class Student:
   def __init__(self, n):

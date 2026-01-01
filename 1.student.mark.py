@@ -1,112 +1,131 @@
-from PySide6.QtWidgets import QApplication, QWidget, QMessageBox
-from PySide6.QtGui import QPainter, QPen, QBrush
-from PySide6.QtCore import Qt, QRectF
+# students: a list of dictionaries,
+#         each dictionary represents one student {'id': ..., 'name':...., 'dob':....}
+students = []
+students = [{'id': '123', 'name': 'Duong', 'dob': '28/05/05'},{'id': '124', 'name': 'Dung', 'dob': '12/12/04'}]
 
-CELL = 30
-STONE_MARGIN = 4
+# course: a list of dictionaries:
+#         each dict is one course {'id':...., 'name':...., 'credit':....}
+courses = []
+courses = [{'id': 'ICT001', 'name': 'informatics', 'credit': 3}, {'id': 'math001', 'name': 'calculus I', 'credit': 4}]
 
-class Gomoku:
-  def __init__(self, size=9, st="pvp"):
-    self.size = size
-    self.t = 1  # 1 = X, 0 = O
-    self.type = 1 if st == "pvp" else 2
-    self.board = [["_" for _ in range(self.size)] for _ in range(self.size)]
+# marks: a dict where keys are courseId
+#        and value is another dict mapping student id to their marks
+#        marks = {'courseId': {'std1Id': ..., 'std2Id': ...., ...}, ....}
+marks = {'ICT001': {'123': 10, '124': 15}, 'math001': {'123': 20}}
 
-  def make_move(self, r, c):
-    if r >= self.size or c >= self.size:
-      return False
-    if self.board[r][c] != '_':
-      return False
-    self.board[r][c] = 'X' if self.t else 'O'
-    self.t = (self.t + 1) % 2
-    return True
+# input functions
+def ipNumberOfStds():
+  return int(input("Number of student: "))
 
-  def check_win_after(self, r, c):
-    t = 'O' if self.t == 1 else 'X'
-    for dx in [-1, 0, 1]:
-      for dy in [-1, 0, 1]:
-        if dx == 0 and dy == 0:
-          continue
-        cnt = 0
-        x1, y1 = r, c
-        x2, y2 = r, c
-        while 0 <= x1 < self.size and 0 <= y1 < self.size and self.board[x1][y1] == t:
-          cnt += 1
-          x1 += dx
-          y1 += dy
+def ipStdInfor():
+  existingStdId = [std['id'] for std in students]
+  for i in range(ipNumberOfStds()):
+    while True: # check for new id
+      stdId = input(f"\tStudent {i + 1}'s id: ")
+      if stdId not in existingStdId:
+        break
+      else:
+        print(f"student with id '{stdId}' already existed")
+    #
+    stdName = input("\t\tName: ")
+    # may have date parsing for validity
+    stdDob = input("\t\tDob: ")
+    #
+    existingStdId.append(stdId)
+    students.append({'id': stdId, 'name': stdName, 'dob': stdDob})
 
-        while 0 <= x2 < self.size and 0 <= y2 < self.size and self.board[x2][y2] == t:
-          cnt += 1
-          x2 -= dx
-          y2 -= dy
+def ipNumberOfCourses():
+  return int(input("Number of course: "))
 
-        if cnt >= 6:
-          return True
-    return False
+def ipCourseInfor():
+  existingCourses = [c['id'] for c in courses]
+  for i in range(ipNumberOfCourses()):
+    while True:
+      cId = input(f"Course {i + 1}'s id: ")
+      if cId not in existingCourses:
+        break
+      else:
+        print(f"Course id {cId} already existed!")
+    #
+    cName = input("\t\tName: ")
+    # try catch cCredit
+    cCredit = int(input("\t\tCredit: "))
+    #
+    existingCourses.append(cId)
+    courses.append({'id': cId, 'name': cName, 'credit': cCredit})
 
-class GomokuBoard(QWidget):
-  def __init__(self, game):
-    super().__init__()
-    self.game = game
-    self.size = game.size
+def ipMarks():
+  existingCourses = [c['id'] for c in courses]
+  print("Updating mark:")
+  #
+  while True:
+    cId = input("\tCourse's id: ")
+    if cId in existingCourses:
+      break
+    else:
+      print(f"\tThere is no course {cId}, try again")
+  #
+  existingStdId = [std['id'] for std in students]
+  while True:
+    stdId = input(f"\tStudent id: ")
+    if stdId in existingStdId:
+      break
+    else:
+      print(f"\tThere is no student id {stdId}, try again")
+  #
+  # may have mark parsing for validity
+  stdMark = int(input("\t\tmark (base 20): "))
+  marks[cId][stdId] = stdMark
 
-    px = self.size * CELL
-    self.setFixedSize(px, px)
-    self.setWindowTitle("Gomoku - PySide6")
+def listStds():
+  print("-"*10)
+  for std in students:
+    print(f"\t{std['id']}\t{std['name']}\t{std['dob']}")
+  print("-"*10)
 
-  def paintEvent(self, event):
-    qp = QPainter(self)
-    qp.setRenderHint(QPainter.Antialiasing)
+def listCourses():
+  print("-"*10)
+  for course in courses:
+    print(f"\t{course['id']}\t{course['name']}\t{course['credit']}")
+  print("-"*10)
 
-    # Draw grids
-    qp.setPen(QPen(Qt.black, 1))
-    for i in range(self.size):
-      y = i * CELL + CELL/2
-      qp.drawLine(CELL/2, y, self.size*CELL - CELL/2, y)
-      x = i * CELL + CELL/2
-      qp.drawLine(x, CELL/2, x, self.size*CELL - CELL/2)
+def showStdMark():
+  cId = input("Enter course ID to view mark: ")
+  if cId not in marks:
+    print("No course found")
+    return
+  #
+  print("-"*10)
+  course = marks[cId]
+  print("Stdudent id \t mark")
+  for (stdId, stdMark) in course.items():
+    print(f"{stdId}\t{stdMark}")
+  print("-"*10)
 
-    # Draw stones
-    for r in range(self.size):
-      for c in range(self.size):
-        v = self.game.board[r][c]
-        if v == '_':
-          continue
-        cx = c*CELL + CELL/2
-        cy = r*CELL + CELL/2
-        if v == 'X':
-          qp.setBrush(QBrush(Qt.black))
-        else:
-          qp.setBrush(QBrush(Qt.white))
+def runMenu():
+  while True:
+    print("\n-----Student mark management-----")
+    print("1. Input student")
+    print("2. Input course")
+    print("3. Input marks")
+    print("4. List students")
+    print("5. List courses")
+    print("6. Show student marks")
+    
+    choice = input("Select an option: ")
+    print("\n")
 
-        radius = CELL/2 - STONE_MARGIN
-        qp.drawEllipse(QRectF(cx - radius, cy - radius, radius*2, radius*2))
+    if choice == '1':
+      ipStdInfor()
+    elif choice == '2':
+      ipCourseInfor()
+    elif choice == '3':
+      ipMarks()
+    elif choice == '4':
+      listStds()
+    elif choice == '5':
+      listCourses()
+    else: # choice == 6
+      showStdMark()
 
-  def mousePressEvent(self, event):
-    if event.button() != Qt.LeftButton:
-      return
-
-    c = event.position().x() // CELL
-    r = event.position().y() // CELL
-    if not self.game.make_move(int(r), int(c)):
-      return
-
-    # Check win
-    if self.game.check_win_after(int(r), int(c)):
-      self.update()
-      winner = "O" if self.game.t == 1 else "X"
-      QMessageBox.information(self, "Game Over", f"{winner} wins!")
-      self.setEnabled(False)
-      return
-
-    self.update()
-
-if __name__ == "__main__":
-  from sys import exit
-  from sys import argv
-  app = QApplication(argv)
-  game = Gomoku(9)  # board size as an argument
-  window = GomokuBoard(game)
-  window.show()
-
-  exit(app.exec())
+runMenu()
