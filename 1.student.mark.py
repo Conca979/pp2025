@@ -15,7 +15,14 @@ marks = {'ICT001': {'123': 10, '124': 15}, 'math001': {'123': 20}}
 
 # input functions
 def ipNumberOfStds():
-  return int(input("Number of student: "))
+  while True:
+    try:
+      n = int(input("Number of student: "))
+      if n < 0:
+        raise ValueError
+      else: return n
+    except ValueError:
+      print("-----Invalid input, pls try again-----")
 
 def ipStdInfor():
   existingStdId = [std['id'] for std in students]
@@ -35,7 +42,14 @@ def ipStdInfor():
     students.append({'id': stdId, 'name': stdName, 'dob': stdDob})
 
 def ipNumberOfCourses():
-  return int(input("Number of course: "))
+  while True:
+    try:
+      n = int(input("Number of course: "))
+      if n < 0:
+        raise ValueError
+      else: return n
+    except ValueError:
+      print("-----Invalid input, pls try again-----")
 
 def ipCourseInfor():
   existingCourses = [c['id'] for c in courses]
@@ -49,9 +63,17 @@ def ipCourseInfor():
     #
     cName = input("\t\tName: ")
     # try catch cCredit
-    cCredit = int(input("\t\tCredit: "))
+    while True:
+      try:
+        cCredit = int(input("\t\tCredit: "))
+        if cCredit < 1:
+          raise ValueError
+        else: break
+      except ValueError:
+        print("-----Invalid input, pls try again-----")
     #
     existingCourses.append(cId)
+    marks[cId] = {}
     courses.append({'id': cId, 'name': cName, 'credit': cCredit})
 
 def ipMarks():
@@ -74,7 +96,14 @@ def ipMarks():
       print(f"\tThere is no student id {stdId}, try again")
   #
   # may have mark parsing for validity
-  stdMark = int(input("\t\tmark (base 20): "))
+  while True:
+    try:
+      stdMark = int(input("\t\tmark (base 20): "))
+      if stdMark < 0:
+        raise ValueError
+      else: break
+    except ValueError:
+      print("-----Invalid input, pls try again-----")
   marks[cId][stdId] = stdMark
 
 def listStds():
@@ -99,7 +128,7 @@ def showStdMark():
   course = marks[cId]
   print("Stdudent id \t mark")
   for (stdId, stdMark) in course.items():
-    print(f"{stdId}\t{stdMark}")
+    print(f"{stdId}\t\t{stdMark}")
   print("-"*10)
 
 def runMenu():
@@ -111,6 +140,7 @@ def runMenu():
     print("4. List students")
     print("5. List courses")
     print("6. Show student marks")
+    print("7. Exit")
     
     choice = input("Select an option: ")
     print("\n")
@@ -125,7 +155,9 @@ def runMenu():
       listStds()
     elif choice == '5':
       listCourses()
-    else: # choice == 6
+    elif choice == '6':
       showStdMark()
+    else: # choice == 7
+      return
 
 runMenu()
