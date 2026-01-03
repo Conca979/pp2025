@@ -99,7 +99,7 @@ def ipMarks():
   while True:
     try:
       stdMark = int(input("\t\tmark (base 20): "))
-      if stdMark < 0:
+      if stdMark < 0 or stdMark > 20:
         raise ValueError
       else: break
     except ValueError:

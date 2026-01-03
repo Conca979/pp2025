@@ -22,7 +22,7 @@ class StudentManagementSystem:
     self.students = {}
     self.courses = {}
 
-  def __ipNumberOfStds(self):
+  def _ipNumberOfStds(self):
     while True:
       try:
         n = int(input("Number of student: "))
@@ -32,7 +32,7 @@ class StudentManagementSystem:
       except ValueError:
         print("-----Invalid input, pls try again-----")
 
-  def __ipNumberOfCourses(self):
+  def _ipNumberOfCourses(self):
     while True:
       try:
         n = int(input("Number of course: "))
@@ -43,7 +43,7 @@ class StudentManagementSystem:
         print("-----Invalid input, pls try again-----")
 
   def ipStdInfor(self):
-    for i in range(self.__ipNumberOfStds()):
+    for i in range(self._ipNumberOfStds()):
       while True: # check for new id
         stdId = input(f"\tStudent {i + 1}'s id: ")
         if stdId not in self.students:
@@ -58,7 +58,7 @@ class StudentManagementSystem:
       self.students[stdId] = Student(stdId, stdName, stdDob)
 
   def ipCourseInfor(self):
-    for i in range(self.__ipNumberOfCourses()):
+    for i in range(self._ipNumberOfCourses()):
       while True:
         cId = input(f"Course {i + 1}'s id: ")
         if cId not in self.courses:
@@ -100,12 +100,12 @@ class StudentManagementSystem:
     while True:
       try:
         stdMark = int(input("\t\tmark (base 20): "))
-        if stdMark < 0:
+        if stdMark < 0 or stdMark > 20:
           raise ValueError
         else: break
       except ValueError:
         print("-----Invalid input, pls try again-----")
-    self.courses[cId].marks = {stdId: stdMark}
+    self.courses[cId].marks[stdId] = stdMark
 
   def listStds(self):
     print("-"*10)
