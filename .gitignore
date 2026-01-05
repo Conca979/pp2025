@@ -1,6 +1,6 @@
 .gitignore
 run.py
-/_pycache_
+__pycache__/
 /__pycache__
 test.py
 __init__.py
