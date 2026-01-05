@@ -4,4 +4,4 @@ run.py
 /__pycache__
 test.py
 __init__.py
-/pw5/domains/data.txt
+/pw5/domains/data.json
