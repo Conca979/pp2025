@@ -43,12 +43,12 @@ class Data:
       for cs in data['courses']:
         c[cs['cId']] = course.Course(cs['cId'], cs['cName'], cs['cCredit'], cs['marks'])
 
-    if 'data.txt' in os.listdir('./domains'):
-      with open('./domains/data.txt') as f:
-        data = json.loads(f.read())
+    if 'data.json' in os.listdir('./domains'):
+      with open('./domains/data.json') as f:
+        data = json.load(f)
         _insertData_(data)
     else:
-      with open('./domains/data.txt', mode = 'w') as f:
+      with open('./domains/data.json', mode = 'w') as f:
         f.write('''{"students": [], "courses": []}''')
   
   def saveData(self, stdList, c):
@@ -58,7 +58,7 @@ class Data:
     for cId in c:
       data["courses"].append({"cId": cId, "cName": c[cId].cName, "cCredit": c[cId].cCredit, "marks": c[cId].marks})
     #
-    with open('./domains/data.txt', mode = 'w') as f:
+    with open('./domains/data.json', mode = 'w') as f:
       f.write(json.dumps(data))
 
 
