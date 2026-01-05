@@ -2,7 +2,7 @@ from domains.student import *
 from domains.course import *
 import math
 
-def _ipNumberOfStds(self):
+def _ipNumberOfStds():
   while True:
     try:
       n = int(input("Number of student: "))
@@ -12,7 +12,7 @@ def _ipNumberOfStds(self):
     except ValueError:
       print("-----Invalid input, pls try again-----")
 
-def _ipNumberOfCourses(self):
+def _ipNumberOfCourses():
   while True:
     try:
       n = int(input("Number of course: "))

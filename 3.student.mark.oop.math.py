@@ -146,8 +146,13 @@ class StudentManagementSystem:
         if stdId in course.marks:
           marks.append(course.marks[stdId])
           credits.append(course.cCredit)
-      stds[i].append(math.floor(np.average(marks, weights = credits)*10)/10)
-      i += 1
+
+      if len(marks) != 0:
+        stds[i].append(math.floor(np.average(marks, weights = credits)*10)/10)
+        i += 1
+      else:
+        stds[i].append(0)
+        i += 1
     #
     stds.sort(key = lambda x : x[1], reverse = False)
     print("-"*10)
